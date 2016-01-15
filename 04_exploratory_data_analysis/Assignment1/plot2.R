@@ -1,0 +1,13 @@
+rm(list = ls())
+setwd("C:/Users/sdharmireddi/Desktop")
+dt = read.table("household_power_consumption.txt",header=TRUE,sep=";")
+dt$datetime = paste(dt$Date, dt$Time)
+dt$datetime = strptime(dt$datetime, format="%d/%m/%Y %H:%M:%S")
+dt$Date = as.character(dt$Date)
+newdata <- subset(dt, dt$Date == "1/2/2007" | dt$Date == "2/2/2007")
+dataforplot2<- gsub(",", "", newdata$Global_active_power)
+dataforplot2<- gsub(",", "", newdata$Global_active_power)
+dataforplot2<- as.numeric(dataforplot2)
+plot(x=newdata$datetime,y=dataforplot2,type="l",xlab="",ylab="Global Active Power (Kilowatts)")
+dev.copy(png, file = "plot2.png") ## Copy my plot to a PNG file
+dev.off()

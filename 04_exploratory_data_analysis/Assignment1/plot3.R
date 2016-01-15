@@ -1,0 +1,22 @@
+rm(list = ls())
+setwd("C:/Users/sdharmireddi/Desktop")
+dt = read.table("household_power_consumption.txt",header=TRUE,sep=";")
+dt$datetime = paste(dt$Date, dt$Time)
+dt$datetime = strptime(dt$datetime, format="%d/%m/%Y %H:%M:%S")
+dt$Date = as.character(dt$Date)
+newdata <- subset(dt, dt$Date == "1/2/2007" | dt$Date == "2/2/2007")
+dataforplot31<- gsub(",", "", newdata$Sub_metering_1)
+dataforplot32<- gsub(",", "", newdata$Sub_metering_2)
+#dataforplot33<- gsub(",", "", newdata$Sub_metering_3)
+dataforplot33<- newdata$Sub_metering_3
+dataforplot31<- as.numeric(dataforplot31)
+dataforplot32<- as.numeric(dataforplot32)
+#dataforplot33<- as.numeric(dataforplot33)
+dataforplot3<- cbind(dataforplot31,dataforplot32,dataforplot33)
+
+plot(x=newdata$datetime, dataforplot3[,1],type = "l",ylim=c(0,38),xlab="",ylab="Energy sub metering",mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
+lines(x=newdata$datetime,dataforplot3[,2],type = "l",col="red")
+lines(x=newdata$datetime,dataforplot3[,3],type = "l",col="blue")
+legend("topright",col = c("black", "red","blue"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"),lwd=2,lty=c(1,1,1),pt.cex=1,cex = 0.5)
+dev.copy(png, file = "plot3.png") ## Copy my plot to a PNG file
+dev.off()
